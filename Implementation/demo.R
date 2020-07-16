@@ -15,4 +15,4 @@ ColorectalCancer <- cbind(1, ColorectalCancer)
 ###Run genetic algorithm, print graph
 Results = GA(ColorectalCancer, 100, 300, 0.5, 0.5, 0.01, 0.05, 0.01, rep(0.05, ncol(ColorectalCancer)),
              suppress = FALSE, method = "SA", penalty = "hard")
-plot(Results[[4]])
+plot(Results$igraph_obj)

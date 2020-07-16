@@ -17,14 +17,22 @@ require(inline)
 ##### p_perm_mut - probability of permutation mutation between two individuals
 ##### e - false positive rate
 ##### d - false negative rate
-##### suppress - (boolean) print to console?
+##### suppress -  print to console?
 ##### method - "SA" (Spontaneous activation) or "ME" (Measurement error)
-#### pentalty - "hard" (3 nodes per parent), "BIC", or "none"
+##### penalty - "hard" (3 nodes per parent), "BIC", or "none"
                 
 
-GA <- function(Data, N, MAX_GEN, p_mat_c, p_cx, p_ba, p_ea, p_perm_mut, leaky, suppress = FALSE,
+GA <- function(Data, N=100, MAX_GEN=100, p_mat_c=0.5, p_cx=0.5, p_ba=0.01, p_ea=0.05, p_perm_mut=0.01, suppress = FALSE,
                method = "SA", penalty = "hard")
 {
+  
+  if(colMeans(Data)[1] != 1) {
+    warning("The first column of data should be all 1's")
+    Data <- cbind(1,Data)
+  }
+  
+  leaky <- rep(min(colMeans(Data))/2, ncol(Data))
+  
   n <- ncol(Data)
   num_samples <- nrow(Data)
   
@@ -279,12 +287,12 @@ GA <- function(Data, N, MAX_GEN, p_mat_c, p_cx, p_ba, p_ea, p_perm_mut, leaky, s
   
   cat("Call summary: \n Method: ", method, "\n Penalty:", penalty, "\n")
   
-  Return_List[[1]] = Results$V1
-  Return_List[[2]] = Results$V2
-  Return_List[[3]] = Temp[,p]
-  Return_List[[4]] = G
-  Return_List[[5]] = Max_fitness
-  Return_List[[6]] = theta
+  Return_List$most_fit = Results$V1
+  Return_List$mean_fit = Results$V2
+  Return_List$adj_mat = Temp[,p]
+  Return_List$igraph_obj = G
+  Return_List$score = Max_fitness
+  Return_List$theta = theta
   return(Return_List)
 }
 
